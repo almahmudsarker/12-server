@@ -190,12 +190,25 @@ async function run() {
       res.send(result);
     })
 
-    app.delete('/carts/:id', async (req, res) => {
+    app.delete('/menu/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await cartCollection.deleteOne(query);
+      const result = await menuCollection.deleteOne(query);
       res.send(result);
     })
+
+    app.get("/menuId", async (req, res) => {
+      let query = {};
+
+      if (req.query._id) {
+        query = {
+          _id: req.query._id,
+        };
+      }
+      const cursor = menuCollection.find(query);
+      const review = await cursor.toArray();
+      res.send(review);
+    });
 
     // create payment intent
     app.post('/create-payment-intent', verifyJWT, async (req, res) => {
